@@ -86,6 +86,37 @@ test.describe('Game Listing and Navigation', () => {
     });
   });
 
+  test('should filter the game list by category and publisher', async ({ page }) => {
+    await test.step('Navigate to homepage and capture the initial list', async () => {
+      await page.goto('/');
+      await expect(page.getByTestId('game-filters')).toBeVisible();
+      const initialVisibleCount = await page.locator('[data-testid="game-card"]:not([hidden])').count();
+      expect(initialVisibleCount).toBeGreaterThan(0);
+    });
+
+    await test.step('Apply a category filter', async () => {
+      const firstCategoryCheckbox = page.locator('[data-testid^="category-filter-"]').first();
+      await expect(firstCategoryCheckbox).toBeVisible();
+      await firstCategoryCheckbox.check();
+      const visibleCards = page.locator('[data-testid="game-card"]:not([hidden])');
+      await expect(visibleCards.first()).toBeVisible();
+      expect(await visibleCards.count()).toBeGreaterThan(0);
+      expect(await visibleCards.count()).toBeLessThanOrEqual(await page.locator('[data-testid="game-card"]').count());
+    });
+
+    await test.step('Apply a publisher filter and clear it again', async () => {
+      const publisherFilter = page.getByTestId('publisher-filter');
+      await expect(publisherFilter).toBeVisible();
+      const options = publisherFilter.locator('option');
+      const optionCount = await options.count();
+      expect(optionCount).toBeGreaterThan(1);
+      await publisherFilter.selectOption({ index: 1 });
+      await expect(page.locator('[data-testid="game-card"]:not([hidden])').first()).toBeVisible();
+      await page.getByTestId('clear-filters-button').click();
+      await expect(page.locator('[data-testid="game-card"]:not([hidden])').first()).toBeVisible();
+    });
+  });
+
   test('should display a button to back the game', async ({ page }) => {
     await test.step('Navigate to game details page', async () => {
       await page.goto('/game/1');
