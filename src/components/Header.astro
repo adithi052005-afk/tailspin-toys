@@ -2,29 +2,55 @@
 import Menu from '../assets/icons/menu.svg';
 ---
 
-<header class="bg-blue-500 dark:bg-blue-700 text-white p-4 shadow-md transition-colors duration-300">
+<header class="bg-blue-800 dark:bg-blue-900 text-white p-4 shadow-md transition-colors duration-300">
   <div class="container mx-auto flex justify-between items-center pl-4 pr-4">
     <div class="flex items-center">
       <div class="relative group">
-        <button id="menu-toggle" class="focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 rounded mr-4" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">
+        <button id="menu-toggle" class="focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-800 rounded mr-4" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu" data-testid="menu-toggle">
           <Menu class="h-6 w-6" aria-hidden="true" />
         </button>
         <nav id="menu" aria-label="Main" class="hidden absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded shadow-lg z-10 transition-colors duration-300">
           <ul class="py-1">
-            <li><a href="/" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700">Home</a></li>
-            <li><a href="/about" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700">About</a></li>
+            <li><a href="/" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500" data-testid="nav-home">Home</a></li>
+            <li><a href="/about" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500" data-testid="nav-about">About</a></li>
           </ul>
         </nav>
       </div>
-      <div class="text-xl font-bold"><a href="/" class="hover:underline">Tailspin Toys</a></div>
+      <div class="text-xl font-bold"><a href="/" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white" data-testid="site-brand">Tailspin Toys</a></div>
     </div>
+    <button
+      type="button"
+      id="contrast-toggle"
+      class="rounded px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-800"
+      aria-pressed="false"
+      data-testid="contrast-toggle"
+    >
+      <span data-testid="contrast-toggle-label">High contrast</span>
+    </button>
   </div>
 </header>
 
 <script>
-  // Toggle menu visibility when hamburger is clicked
   const menuToggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('menu');
+  const contrastToggle = document.getElementById('contrast-toggle');
+  const contrastLabel = document.querySelector('[data-testid="contrast-toggle-label"]');
+  const contrastStorageKey = 'tailspin-high-contrast';
+
+  function updateContrastToggle() {
+    const isHighContrast = document.documentElement.classList.contains('high-contrast');
+    contrastToggle?.setAttribute('aria-pressed', String(isHighContrast));
+    if (contrastLabel) {
+      contrastLabel.textContent = isHighContrast ? 'Standard contrast' : 'High contrast';
+    }
+  }
+
+  contrastToggle?.addEventListener('click', () => {
+    const isHighContrast = document.documentElement.classList.toggle('high-contrast');
+    localStorage.setItem(contrastStorageKey, String(isHighContrast));
+    updateContrastToggle();
+  });
+  updateContrastToggle();
   
   if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {

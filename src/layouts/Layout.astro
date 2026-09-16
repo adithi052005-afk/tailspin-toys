@@ -21,6 +21,11 @@ const { title = "Tailspin Toys" } = Astro.props;
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <script is:inline>
+            if (localStorage.getItem('tailspin-high-contrast') === 'true') {
+                document.documentElement.classList.add('high-contrast');
+            }
+        </script>
     </head>
     <body class="min-h-screen bg-slate-900 text-white transition-colors duration-300 m-0 w-full h-full font-sans">
         <Header />
@@ -45,5 +50,60 @@ const { title = "Tailspin Toys" } = Astro.props;
     body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    .high-contrast body {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+
+    .high-contrast header {
+        background-color: #000 !important;
+        border-bottom: 2px solid #ffeb3b;
+    }
+
+    .high-contrast nav {
+        background-color: #000 !important;
+    }
+
+    .high-contrast main,
+    .high-contrast main > div,
+    .high-contrast [data-testid='game-filters'],
+    .high-contrast [data-testid='game-card'],
+    .high-contrast [data-testid='game-details'],
+    .high-contrast [data-testid='about-section'],
+    .high-contrast [data-testid='not-found'] {
+        background-color: #000 !important;
+        color: #fff !important;
+        border-color: #ffeb3b !important;
+    }
+
+    .high-contrast h1,
+    .high-contrast h2,
+    .high-contrast h3,
+    .high-contrast p,
+    .high-contrast span,
+    .high-contrast label,
+    .high-contrast legend {
+        color: #fff !important;
+    }
+
+    .high-contrast a,
+    .high-contrast button,
+    .high-contrast select {
+        color: #ffeb3b !important;
+        border-color: #ffeb3b !important;
+    }
+
+    .high-contrast a:hover,
+    .high-contrast button:hover,
+    .high-contrast select:hover {
+        background-color: #222 !important;
+    }
+
+    .high-contrast :focus-visible {
+        outline: 3px solid #ffeb3b !important;
+        outline-offset: 3px;
+        box-shadow: none !important;
     }
 </style>
